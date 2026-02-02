@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Profile | Assign2</title>
+    <link rel="stylesheet" href="/site.css" />
+    <script src="/site.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <div class="brand">
+          <div class="logo"></div>
+          <div>
+            <div class="brand-title">Student Management</div>
+            <div class="brand-sub">My Profile</div>
+          </div>
+        </div>
+        <div class="nav">
+          <a class="btn" th:href="@{/dashboard}">Dashboard</a>
+          <form th:action="@{/logout}" method="post">
+            <button class="btn" type="submit">Logout</button>
+          </form>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="container">
+        <section class="card">
+          <div class="row" style="justify-content: space-between; align-items: end">
+            <div>
+              <div class="card-title">Profile</div>
+              <div class="muted" th:text="'Role: ' + ${role}">Role</div>
+            </div>
+            <div class="row">
+              <span class="chip" th:text="'Hello, ' + ${displayName}">Hello</span>
+            </div>
+          </div>
+
+          <div class="notice ok" id="notice" th:if="${flashMessage}" th:text="${flashMessage}" style="margin-top: 12px"></div>
+          <div class="notice bad" id="notice2" th:if="${errorMessage}" th:text="${errorMessage}" style="margin-top: 12px"></div>
+
+          <form th:if="${role} == 'STUDENT'" th:action="@{/profile/student}" method="post" style="margin-top: 12px">
+            <div class="grid2">
+              <div>
+                <label class="label" for="studentName">Name</label>
+                <input class="input" id="studentName" name="name" th:value="${student.name}" />
+              </div>
+              <div>
+                <label class="label" for="studentEmail">Email</label>
+                <input class="input" id="studentEmail" name="email" th:value="${student.email}" />
+              </div>
+            </div>
+            <div class="row" style="margin-top: 12px">
+              <button class="btn btn-primary" type="submit">Save</button>
+              <div class="muted">You can update your own name and email.</div>
+            </div>
+          </form>
+
+          <form th:if="${role} == 'TEACHER'" th:action="@{/profile/teacher}" method="post" style="margin-top: 12px">
+            <div class="grid2">
+              <div>
+                <label class="label" for="teacherName">Name</label>
+                <input class="input" id="teacherName" name="name" th:value="${teacher.name}" />
+              </div>
+              <div>
+                <label class="label" for="teacherSubject">Subject</label>
+                <input class="input" id="teacherSubject" name="subject" th:value="${teacher.subject}" />
+              </div>
+            </div>
+            <div class="row" style="margin-top: 12px">
+              <button class="btn btn-primary" type="submit">Save</button>
+              <div class="muted">You can update your own profile.</div>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <div class="container footer" style="margin-top: 18px">
+        © Student Management System
+      </div>
+    </main>
+  </body>
+</html>

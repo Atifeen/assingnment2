@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign Up | Assign2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/site.css" />
+    <script src="/site.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <div class="brand">
+          <div class="logo">SM</div>
+          <div>
+            <div class="brand-title">Student Management</div>
+            <div class="brand-sub">Create an account</div>
+          </div>
+        </div>
+        <div class="nav">
+          <a class="btn" th:href="@{/login}">Login</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="container hero">
+        <section class="card">
+          <div class="card-title">Create Account</div>
+          <div class="muted" style="margin-top: 8px">Join our Student Management System as a Student or Teacher.</div>
+
+          <div class="notice bad" id="notice" th:if="${errorMessage}" th:text="${errorMessage}" style="margin-top: 16px"></div>
+
+          <form th:action="@{/signup}" method="post" style="margin-top: 20px">
+            <div class="grid2">
+              <div>
+                <label class="label" for="username">💬 Username</label>
+                <input class="input" id="username" name="username" autocomplete="username" placeholder="Choose a unique username" required />
+              </div>
+              <div>
+                <label class="label" for="password">🔒 Password</label>
+                <input class="input" id="password" name="password" type="password" autocomplete="new-password" placeholder="Create a secure password" required />
+              </div>
+            </div>
+
+            <div class="grid2">
+              <div>
+                <label class="label" for="role">🎨 Role</label>
+                <select class="input" id="role" name="role">
+                  <option value="STUDENT" th:selected="${defaultRole} == 'STUDENT'">Student</option>
+                  <option value="TEACHER" th:selected="${defaultRole} == 'TEACHER'">Teacher</option>
+                </select>
+              </div>
+              <div>
+                <label class="label" for="name">📝 Full Name</label>
+                <input class="input" id="name" name="name" placeholder="Enter your full name" required />
+              </div>
+            </div>
+
+            <div class="grid2">
+              <div>
+                <label class="label" for="email">📧 Email (Student)</label>
+                <input class="input" id="email" name="email" type="email" placeholder="student@example.com" />
+              </div>
+              <div>
+                <label class="label" for="subject">📚 Subject (Teacher)</label>
+                <input class="input" id="subject" name="subject" placeholder="e.g., Mathematics, Computer Science" />
+              </div>
+            </div>
+
+            <div class="row" style="margin-top: 24px; gap: 12px">
+              <button class="btn btn-primary" type="submit" style="flex: 1">✨ Create Account</button>
+              <div class="spacer"></div>
+              <span class="chip">🔑 Login after signup</span>
+            </div>
+          </form>
+        </section>
+
+        <aside class="card">
+          <div class="card-title">🎆 Getting Started</div>
+          <div class="muted" style="margin-top: 8px; line-height: 1.6">
+            <strong>Students</strong> can view their profiles, courses, and manage their personal information.
+            <br><br>
+            <strong>Teachers</strong> have full administrative access to manage departments, courses, students, and other teachers.
+            <br><br>
+            Choose your role carefully as it determines your permissions within the system.
+          </div>
+        </aside>
+      </div>
+
+      <div class="container footer" style="margin-top: 24px">
+        Already have an account? <a th:href="@{/login}" style="color: #3b82f6; font-weight: 500;">Sign in here</a>
+      </div>
+    </main>
+  </body>
+</html>

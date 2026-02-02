@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login | Assign2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/site.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <div class="brand">
+          <div class="logo">SM</div>
+          <div>
+            <div class="brand-title">Student Management</div>
+            <div class="brand-sub">Login to continue</div>
+          </div>
+        </div>
+        <div class="nav">
+          <a class="btn" th:href="@{/signup}">Create account</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="container hero">
+        <section class="card">
+          <div class="card-title">Welcome Back</div>
+          <div class="muted" style="margin-top: 8px">
+            Sign in to access your Student Management dashboard. Students and Teachers have different permissions and views.
+          </div>
+
+          <div class="notice bad" id="notice" th:if="${param.error}">
+            Invalid username or password.
+          </div>
+          <div class="notice ok" id="notice2" th:if="${param.logout}">
+            Logged out successfully.
+          </div>
+
+          <form th:action="@{/login}" method="post" style="margin-top: 20px">
+            <div>
+              <label class="label" for="username">Username</label>
+              <input class="input" id="username" name="username" autocomplete="username" placeholder="Enter your username" required />
+            </div>
+
+            <div>
+              <label class="label" for="password">Password</label>
+              <input class="input" id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required />
+            </div>
+
+            <div class="row" style="margin-top: 20px; gap: 12px">
+              <button class="btn btn-primary" type="submit" style="flex: 1">Login</button>
+              <a class="btn" th:href="@{/signup}" style="flex: 1; text-align: center">Sign Up</a>
+            </div>
+          </form>
+        </section>
+
+        </section>
+      </div>
+    </main>
+    <script src="/site.js"></script>
+  </body>
+</html>

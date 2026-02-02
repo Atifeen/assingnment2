@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Departments | Assign2</title>
+    <link rel="stylesheet" href="/site.css" />
+    <script src="/site.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <div class="brand">
+          <div class="logo"></div>
+          <div>
+            <div class="brand-title">Departments</div>
+            <div class="brand-sub" th:text="'Role: ' + ${role}">Role</div>
+          </div>
+        </div>
+        <div class="nav">
+          <a class="btn" th:href="@{/dashboard}">Dashboard</a>
+          <a class="btn" th:href="@{/profile}">My Profile</a>
+          <form th:action="@{/logout}" method="post">
+            <button class="btn" type="submit">Logout</button>
+          </form>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="container">
+        <section class="card">
+          <div class="row" style="justify-content: space-between; align-items: end">
+            <div>
+              <div class="card-title">Departments</div>
+            </div>
+            <div class="row" th:if="${isTeacher}">
+              <form th:action="@{/depts}" method="post" class="row">
+                <input class="input" name="name" placeholder="New dept name" style="width: 260px" />
+                <button class="btn btn-primary" type="submit">Add</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="notice ok" id="notice" th:if="${flashMessage}" th:text="${flashMessage}" style="margin-top: 12px"></div>
+          <div class="notice bad" id="notice2" th:if="${errorMessage}" th:text="${errorMessage}" style="margin-top: 12px"></div>
+
+          <div class="table-wrap" style="margin-top: 12px">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 90px">ID</th>
+                  <th>Name</th>
+                  <th style="width: 320px" th:if="${isTeacher}">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="d : ${depts}">
+                  <td th:text="${d.id}">1</td>
+                  <td th:text="${d.name}">Name</td>
+                  <td th:if="${isTeacher}">
+                    <div class="actions">
+                      <form th:action="@{'/depts/' + ${d.id} + '/update'}" method="post" class="row" style="gap: 8px">
+                        <input class="input" name="name" th:value="${d.name}" style="width: 180px" />
+                        <button class="btn" type="submit">Update</button>
+                      </form>
+                      <form th:action="@{'/depts/' + ${d.id} + '/delete'}" method="post" onsubmit="return confirmDelete('Delete this department?')">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
+

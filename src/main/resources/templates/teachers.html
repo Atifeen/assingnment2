@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Teachers | Assign2</title>
+    <link rel="stylesheet" href="/site.css" />
+    <script src="/site.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <div class="brand">
+          <div class="logo"></div>
+          <div>
+            <div class="brand-title">Teachers</div>
+            <div class="brand-sub" th:text="'Role: ' + ${role}">Role</div>
+          </div>
+        </div>
+        <div class="nav">
+          <a class="btn" th:href="@{/dashboard}">Dashboard</a>
+          <a class="btn" th:href="@{/profile}">My Profile</a>
+          <form th:action="@{/logout}" method="post">
+            <button class="btn" type="submit">Logout</button>
+          </form>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="container">
+        <section class="card">
+          <div class="row" style="justify-content: space-between; align-items: end">
+            <div>
+              <div class="card-title">Teachers</div>
+            </div>
+          </div>
+
+          <div class="notice ok" id="notice" th:if="${flashMessage}" th:text="${flashMessage}" style="margin-top: 12px"></div>
+          <div class="notice bad" id="notice2" th:if="${errorMessage}" th:text="${errorMessage}" style="margin-top: 12px"></div>
+
+          <div class="card" th:if="${isTeacher}" style="margin-top: 12px">
+            <div class="card-title">Add Teacher</div>
+            <form th:action="@{/teachers}" method="post" style="margin-top: 8px">
+              <div class="grid2">
+                <div>
+                  <label class="label" for="tName">Name</label>
+                  <input class="input" id="tName" name="name" />
+                </div>
+                <div>
+                  <label class="label" for="tSubject">Subject</label>
+                  <input class="input" id="tSubject" name="subject" />
+                </div>
+              </div>
+              <label class="label" for="tDept">Dept</label>
+              <select class="input" id="tDept" name="deptId">
+                <option value="">(none)</option>
+                <option th:each="d : ${depts}" th:value="${d.id}" th:text="${d.name}"></option>
+              </select>
+              <div class="row" style="margin-top: 12px">
+                <button class="btn btn-primary" type="submit">Create</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="table-wrap" style="margin-top: 12px">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 90px">ID</th>
+                  <th>Name</th>
+                  <th>Subject</th>
+                  <th>Dept</th>
+                  <th style="width: 360px" th:if="${isTeacher}">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="t : ${teachers}">
+                  <td th:text="${t.id}">1</td>
+                  <td th:text="${t.name}">Name</td>
+                  <td th:text="${t.subject}">Subject</td>
+                  <td th:text="${t.dept != null ? t.dept.name : ''}">Dept</td>
+                  <td th:if="${isTeacher}">
+                    <div class="actions">
+                      <form th:action="@{'/teachers/' + ${t.id} + '/update'}" method="post" class="row" style="gap: 8px; flex-wrap: wrap">
+                        <input class="input" name="name" th:value="${t.name}" style="width: 140px" />
+                        <input class="input" name="subject" th:value="${t.subject}" style="width: 140px" />
+                        <select class="input" name="deptId" style="width: 160px">
+                          <option value="">(none)</option>
+                          <option th:each="d : ${depts}" th:value="${d.id}" th:text="${d.name}" th:selected="${t.dept != null and t.dept.id == d.id}"></option>
+                        </select>
+                        <button class="btn" type="submit">Update</button>
+                      </form>
+                      <form th:action="@{'/teachers/' + ${t.id} + '/delete'}" method="post" onsubmit="return confirmDelete('Delete this teacher?')">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
+

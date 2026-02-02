@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: assign2
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: newpassword
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  port: 8082
+
+app:
+  jwt:
+    secret: "change-this-to-a-long-random-secret-at-least-32-chars"
+    expiration-seconds: 3600

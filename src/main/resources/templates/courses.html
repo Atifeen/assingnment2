@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Courses | Assign2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/site.css" />
+    <script src="/site.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <div class="brand">
+          <div class="logo">SM</div>
+          <div>
+            <div class="brand-title">Courses</div>
+            <div class="brand-sub" th:text="'Role: ' + ${role}">Role</div>
+          </div>
+        </div>
+        <div class="nav">
+          <a class="btn" th:href="@{/dashboard}">🏠 Dashboard</a>
+          <a class="btn" th:href="@{/profile}">📝 Profile</a>
+          <form th:action="@{/logout}" method="post">
+            <button class="btn" type="submit">🚪 Logout</button>
+          </form>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="container">
+        <section class="card">
+          <div class="row" style="justify-content: space-between; align-items: end">
+            <div>
+              <div class="card-title">Courses</div>
+            </div>
+          </div>
+
+          <div class="notice ok" id="notice" th:if="${flashMessage}" th:text="${flashMessage}" style="margin-top: 12px"></div>
+          <div class="notice bad" id="notice2" th:if="${errorMessage}" th:text="${errorMessage}" style="margin-top: 12px"></div>
+
+          <div class="card" th:if="${isTeacher}" style="margin-top: 12px">
+            <div class="card-title">Add Course</div>
+            <form th:action="@{/courses}" method="post" style="margin-top: 8px">
+              <div class="grid2">
+                <div>
+                  <label class="label" for="cName">Name</label>
+                  <input class="input" id="cName" name="name" />
+                </div>
+                <div>
+                  <label class="label" for="cTeacher">Teacher</label>
+                  <select class="input" id="cTeacher" name="teacherId">
+                    <option value="">(none)</option>
+                    <option th:each="t : ${teachers}" th:value="${t.id}" th:text="${t.name}"></option>
+                  </select>
+                </div>
+              </div>
+              <div class="row" style="margin-top: 12px">
+                <button class="btn btn-primary" type="submit">Create</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="table-wrap" style="margin-top: 12px">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 90px">ID</th>
+                  <th>Name</th>
+                  <th>Teacher</th>
+                  <th style="width: 360px" th:if="${isTeacher}">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="c : ${courses}">
+                  <td th:text="${c.id}">1</td>
+                  <td th:text="${c.name}">Name</td>
+                  <td th:text="${c.teacher != null ? c.teacher.name : ''}">Teacher</td>
+                  <td th:if="${isTeacher}">
+                    <div class="actions">
+                      <form th:action="@{'/courses/' + ${c.id} + '/update'}" method="post" class="row" style="gap: 8px; flex-wrap: wrap">
+                        <input class="input" name="name" th:value="${c.name}" style="width: 180px" />
+                        <select class="input" name="teacherId" style="width: 180px">
+                          <option value="">(none)</option>
+                          <option th:each="t : ${teachers}" th:value="${t.id}" th:text="${t.name}" th:selected="${c.teacher != null and c.teacher.id == t.id}"></option>
+                        </select>
+                        <button class="btn" type="submit">Update</button>
+                      </form>
+                      <form th:action="@{'/courses/' + ${c.id} + '/delete'}" method="post" onsubmit="return confirmDelete('Delete this course?')">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
+

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Students | Assign2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/site.css" />
+    <script src="/site.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <div class="brand">
+          <div class="logo">SM</div>
+          <div>
+            <div class="brand-title">Students</div>
+            <div class="brand-sub" th:text="'Role: ' + ${role}">Role</div>
+          </div>
+        </div>
+        <div class="nav">
+          <a class="btn" th:href="@{/dashboard}">🏠 Dashboard</a>
+          <a class="btn" th:href="@{/profile}">📝 Profile</a>
+          <form th:action="@{/logout}" method="post">
+            <button class="btn" type="submit">🚪 Logout</button>
+          </form>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="container">
+        <section class="card">
+          <div class="row" style="justify-content: space-between; align-items: end">
+            <div>
+              <div class="card-title">🎓 Students Management</div>
+            </div>
+          </div>
+
+          <div class="notice ok" id="notice" th:if="${flashMessage}" th:text="${flashMessage}" style="margin-top: 12px"></div>
+          <div class="notice bad" id="notice2" th:if="${errorMessage}" th:text="${errorMessage}" style="margin-top: 12px"></div>
+
+          <div class="card" th:if="${isTeacher}" style="margin-top: 16px">
+            <div class="card-title">➕ Add New Student</div>
+            <form th:action="@{/students}" method="post" style="margin-top: 12px">
+              <div class="grid2">
+                <div>
+                  <label class="label" for="sName">📝 Name</label>
+                  <input class="input" id="sName" name="name" placeholder="Enter student's full name" required />
+                </div>
+                <div>
+                  <label class="label" for="sEmail">📧 Email</label>
+                  <input class="input" id="sEmail" name="email" type="email" placeholder="student@example.com" />
+                </div>
+              </div>
+
+              <div class="grid2">
+                <div>
+                  <label class="label" for="sDept">🏢 Department</label>
+                  <select class="input" id="sDept" name="deptId">
+                    <option value="">(Select Department)</option>
+                    <option th:each="d : ${depts}" th:value="${d.id}" th:text="${d.name}"></option>
+                  </select>
+                </div>
+                <div>
+                  <label class="label" for="sCourses">📚 Courses</label>
+                  <select class="input" id="sCourses" name="courseIds" multiple size="6">
+                    <option th:each="c : ${courses}" th:value="${c.id}" th:text="${c.name}"></option>
+                  </select>
+                  <small style="color: #6b7280; font-size: 12px; margin-top: 4px; display: block;">Hold Ctrl/Cmd to select multiple courses</small>
+                </div>
+              </div>
+
+              <div class="row" style="margin-top: 16px">
+                <button class="btn btn-primary" type="submit">✨ Create Student</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="table-wrap" style="margin-top: 20px">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 80px">🏷 ID</th>
+                  <th>📝 Name</th>
+                  <th>📧 Email</th>
+                  <th>🏢 Department</th>
+                  <th>📚 Courses</th>
+                  <th style="width: 420px" th:if="${isTeacher}">⚙ Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="s : ${students}">
+                  <td><span class="mono" th:text="${s.id}">1</span></td>
+                  <td><strong th:text="${s.name}">Name</strong></td>
+                  <td><span style="color: #6b7280" th:text="${s.email ?: 'No email'}">Email</span></td>
+                  <td>
+                    <span th:if="${s.dept != null}" class="chip" style="font-size: 11px; padding: 4px 8px" th:text="${s.dept.name}">Dept</span>
+                    <span th:if="${s.dept == null}" style="color: #9ca3af; font-style: italic">No department</span>
+                  </td>
+                  <td>
+                    <div th:if="${s.courses != null and !s.courses.isEmpty()}" style="display: flex; flex-wrap: wrap; gap: 4px">
+                      <span th:each="c : ${s.courses}" class="chip" style="font-size: 10px; padding: 2px 6px; background: rgba(59, 130, 246, 0.1); color: #3b82f6" th:text="${c.name}"></span>
+                    </div>
+                    <span th:if="${s.courses == null or s.courses.isEmpty()}" style="color: #9ca3af; font-style: italic">No courses</span>
+                  </td>
+                  <td th:if="${isTeacher}">
+                    <div class="actions">
+                      <form th:action="@{'/students/' + ${s.id} + '/update'}" method="post" class="row" style="gap: 6px; flex-wrap: wrap; margin-bottom: 8px">
+                        <input class="input" name="name" th:value="${s.name}" style="width: 140px; font-size: 12px; padding: 6px 8px" placeholder="Name" />
+                        <input class="input" name="email" th:value="${s.email}" style="width: 160px; font-size: 12px; padding: 6px 8px" placeholder="Email" />
+                        <select class="input" name="deptId" style="width: 120px; font-size: 12px; padding: 6px 8px">
+                          <option value="">(none)</option>
+                          <option th:each="d : ${depts}" th:value="${d.id}" th:text="${d.name}" th:selected="${s.dept != null and s.dept.id == d.id}"></option>
+                        </select>
+                        <button class="btn" type="submit" style="font-size: 11px; padding: 6px 12px">✏ Update</button>
+                      </form>
+                      <form th:action="@{'/students/' + ${s.id} + '/delete'}" method="post" onsubmit="return confirmDelete('Delete this student?')" style="display: inline">
+                        <button class="btn btn-danger" type="submit" style="font-size: 11px; padding: 6px 12px">🗑 Delete</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
